@@ -1,8 +1,19 @@
 import Navbar from "@/ui/navbar";
 import { FilterSelect } from "@/ui/select";
-import { Form, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
+import {
+  Form,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+  useSubmit,
+} from "react-router-dom";
 
-export const SearchForm = () => {
+type TSeachForm = {
+  level: string;
+  section: string;
+};
+
+export const SearchForm = ({ level, section }: TSeachForm) => {
   const submit = useSubmit();
 
   return (
@@ -21,7 +32,7 @@ export const SearchForm = () => {
               <label htmlFor="level">ชั้น</label>
               <FilterSelect
                 name="level"
-                defaultValue={"1"}
+                defaultValue={level}
                 onChange={(e) => submit(e.currentTarget.form)}
               >
                 {Array.from({ length: 6 }).map((_, i) => (
@@ -33,7 +44,7 @@ export const SearchForm = () => {
               <label htmlFor="section">ห้อง</label>
               <FilterSelect
                 name="section"
-                defaultValue={"1"}
+                defaultValue={section}
                 onChange={(e) => submit(e.currentTarget.form)}
               >
                 {Array.from({ length: 8 }).map((_, i) => (
@@ -82,7 +93,11 @@ type TData = {
   stdInfo: TStdInfo;
 };
 
-const Table = () => {
+type TTable = {
+  level: string;
+};
+
+const Table = ({ level }: TTable) => {
   const loaderData = useLoaderData() as TLoaderData;
 
   const TableRow = ({
@@ -101,7 +116,9 @@ const Table = () => {
 
     let sum: number = 0;
 
-    approvedScore.forEach(({ type, score }) => {
+    approvedScore.forEach(({ type, score, create_at }) => {
+      if (level === "4" && create_at < "2024-05-01 00:00:00") return;
+
       if (type === "add") {
         sum += parseInt(score.toString());
       } else if (type === "deduct") {
@@ -177,11 +194,17 @@ const Table = () => {
 };
 
 export default function PersonInfo() {
+  const { search } = useLocation();
+  const query = new URLSearchParams(search);
+
+  const level = (query.get("level") ? query.get("level") : "1") as string;
+  const section = (query.get("section") ? query.get("section") : "1") as string;
+
   return (
     <div className="flex flex-col gap-3">
       <Navbar />
-      <SearchForm />
-      <Table />
+      <SearchForm level={level} section={section} />
+      <Table level={level} />
     </div>
   );
 }

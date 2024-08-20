@@ -29,6 +29,11 @@ type THistory = {
   type?: string;
 };
 
+type TCaseDetail = {
+  case_id: string;
+  detail: string | null;
+};
+
 type TCase = {
   caseId?: string;
   detail?: string;
@@ -170,9 +175,23 @@ export default function StudentHistory() {
   const loaderData = useLoaderData() as {
     std_data: TStdData;
     history: THistory[];
+    case_detail: TCaseDetail[];
   };
 
   const stdData = loaderData.std_data;
+  // // filter out null detail
+  // const fileredNullCaseDetail = loaderData.case_detail.filter(
+  //   (element) => element.detail !== null
+  // );
+  // // remove duplicated element from filtered case detail
+  // const removedDuplicatedCaseDetail = fileredNullCaseDetail.filter(
+  //   (element, index, self) =>
+  //     index === self.findIndex((t) => t.case_id === element.case_id)
+  // );
+  // // Filter between processed history out
+  // const fiteredLastStepHistory = loaderData.history.filter(
+  //   (element) => element.step === 2
+  // );
 
   // group case by id
   const cases: TCase[] = [];

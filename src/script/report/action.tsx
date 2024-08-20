@@ -14,6 +14,7 @@ import { APIBasePath } from "@/script/config.json";
 
 export const action = async ({ request }: { request: Request }) => {
   const formData = await request.formData();
+
   // const selectedStudent = JSON.parse(
   //   formData.get("selectedStudentID")!.toString()
   // );

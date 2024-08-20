@@ -96,6 +96,13 @@ export const Toggler = ({
 export const ReportForm = () => {
   const actionData = useActionData() as TActionData;
   const { search } = useLocation();
+  const searchParams = new URLSearchParams(search);
+  const level = (
+    searchParams.get("level") ? searchParams.get("level") : "1"
+  ) as string;
+  const section = (
+    searchParams.get("section") ? searchParams.get("section") : "1"
+  ) as string;
   const editedSearch = search.replace(/\?/, "&");
   const { user } = useAuth();
   const { selectedStudentID, setSelectedStudentID, type, setType } =
@@ -162,6 +169,8 @@ export const ReportForm = () => {
         formData.append("selectedStudentID", JSON.stringify(selectedStudentID));
         formData.append("doerID", doerID);
         formData.append("type", type);
+        formData.append("level", level);
+        formData.append("section", section);
 
         // reset all input
         setDetail("");

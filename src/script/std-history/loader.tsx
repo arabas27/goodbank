@@ -7,7 +7,7 @@ export const loader = async ({ params }: { params: Params }) => {
 
   const response: AxiosResponse = await axios({
     method: "get",
-    url: `${APIBasePath}/getStudentHistory.php?stdid=${stdid}`,
+    url: `${APIBasePath}/getStudentHistoryE.php?stdid=${stdid}`,
   })
     .then((response) => response.data)
     .catch((error) => console.log(error));
