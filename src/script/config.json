@@ -1,0 +1,7 @@
+{
+    "basePath": "/goodbank/",
+    "APIBasePath": "https://www.wirarat.ac.th/api/goodbank",
+    "devBasePath": "/",
+    "APIDevBasePath": "http://localhost/api/goodbank",
+    "startDate": "2024-05-01 00:00:00"
+}
