@@ -3,6 +3,7 @@ import { APIBasePath } from "@/script/config.json";
 
 export const action = async ({ request }: { request: Request }) => {
   const formData = await request.formData();
+
   const results = await axios({
     method: "post",
     url: `${APIBasePath}/saveTeacher.php`,

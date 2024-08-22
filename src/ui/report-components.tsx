@@ -223,7 +223,7 @@ export const ReportForm = () => {
                 <div className="absolute -top-3 left-2 bg-white px-3 border border-gray-500 rounded">
                   เลือกคะแนน
                 </div>
-                <div className="ps-5">
+                <div className="flex flex-col gap-1 ps-5">
                   <div className="flex flex-row gap-1">
                     <input
                       type="radio"
@@ -235,8 +235,20 @@ export const ReportForm = () => {
                     <label htmlFor="score0">ส่งต่อฝ่ายกิจการ</label>
                   </div>
                   <div className="flex flex-row gap-1">
+                    <input type="radio" name="score" id="score1" value={1} />
+                    <label htmlFor="score1">1 คะแนน</label>
+                  </div>
+                  <div className="flex flex-row gap-1">
+                    <input type="radio" name="score" id="score2" value={2} />
+                    <label htmlFor="score2">2 คะแนน</label>
+                  </div>
+                  <div className="flex flex-row gap-1">
                     <input type="radio" name="score" id="score3" value={3} />
                     <label htmlFor="score3">3 คะแนน</label>
+                  </div>
+                  <div className="flex flex-row gap-1">
+                    <input type="radio" name="score" id="score4" value={4} />
+                    <label htmlFor="score4">4 คะแนน</label>
                   </div>
                   <div className="flex flex-row gap-1">
                     <input type="radio" name="score" id="score5" value={5} />

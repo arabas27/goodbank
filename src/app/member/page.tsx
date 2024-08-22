@@ -41,7 +41,7 @@ export default function Member() {
     title: "นาง",
     firstname: "",
     lastname: "",
-    username: `ws${(parseInt(data[0].username.replace(/ws/, "")) + 1)
+    username: `ws${(parseInt(data[0].username.replace(/ws|std/, "")) + 1)
       .toString()
       .padStart(5, "0")}`,
     password: "1234",
@@ -64,33 +64,42 @@ export default function Member() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const dummy: TDummy = {};
-    let checker = 0;
+    const formData = new FormData(e.currentTarget);
 
-    for (const [key, value] of Object.entries(teacherData)) {
-      if (key === "password") {
-        if (value.toString().length < 4) {
+    if (formData.get("action") === "save") {
+      const dummy: TDummy = {};
+      let checker = 0;
+
+      for (const [key, value] of Object.entries(teacherData)) {
+        if (key === "password") {
+          if (value.toString().length < 4) {
+            checker = 1;
+            dummy[key] = "พาสเวิร์ดไม่น้อยกว่า 4 ตัวอักษร";
+          }
+        } else if (value === "") {
           checker = 1;
-          dummy[key] = "พาสเวิร์ดไม่น้อยกว่า 4 ตัวอักษร";
+          dummy[key] = "*จำเป็น";
         }
-      } else if (value === "") {
-        checker = 1;
-        dummy[key] = "*จำเป็น";
       }
-    }
-    // console.log(checker);
-    setError({ ...error, ...dummy });
-    // block submit if error
-    if (checker === 1) return;
+      // console.log(checker);
+      setError({ ...error, ...dummy });
+      // block submit if error
+      if (checker === 1) return;
 
-    const formData = new FormData();
-    formData.append("id", teacherData.id.toString());
-    formData.append("title", teacherData.title);
-    formData.append("firstname", teacherData.firstname);
-    formData.append("lastname", teacherData.lastname);
-    formData.append("authen_level", teacherData.authen_level.toString());
-    formData.append("username", teacherData.username);
-    formData.append("password", teacherData.password);
+      formData.append("id", teacherData.id.toString());
+      formData.append("title", teacherData.title);
+      formData.append("firstname", teacherData.firstname);
+      formData.append("lastname", teacherData.lastname);
+      formData.append("authen_level", teacherData.authen_level.toString());
+      formData.append("username", teacherData.username);
+      formData.append("password", teacherData.password);
+    } else if (formData.get("action") === "delete") {
+      const isDeleted = confirm(
+        `ต้องการลบรายการ ${formData.get("fullname")} ไหม?`
+      );
+
+      if (!isDeleted) return;
+    }
 
     submit(formData, {
       method: "POST",
@@ -110,18 +119,39 @@ export default function Member() {
     index: number;
   }) => {
     return (
-      <div
-        className="flex flex-row"
-        onClick={() =>
-          setTeacherData(data.filter((el) => el.id === value.id)[0])
-        }
-      >
-        <div className="w-2/12">
-          <div className="text-blue-500">เลือก</div>
+      <div className="flex flex-row">
+        <div
+          className="w-2/12"
+          onClick={() =>
+            setTeacherData(data.filter((el) => el.id === value.id)[0])
+          }
+        >
+          <div className="text-blue-500 font-bold">เลือก</div>
         </div>
-        <div className="w-2/12">{index + 1}</div>
+        <div className="w-1/12">{index + 1}</div>
         <div className="w-5/12">{`${value.firstname} ${value.lastname}`}</div>
         <div className="w-3/12">{value.username}</div>
+        <Form className="w-1/12" onClick={handleSubmit}>
+          <input
+            className="hidden"
+            type="text"
+            name="action"
+            defaultValue="delete"
+          />
+          <input
+            className="hidden"
+            type="text"
+            name="id"
+            defaultValue={value.id}
+          />
+          <input
+            className="hidden"
+            type="text"
+            name="fullname"
+            defaultValue={`${value.firstname} ${value.lastname}`}
+          />
+          <div className="text-red-500 font-bold">ลบ</div>
+        </Form>
       </div>
     );
   };
@@ -277,6 +307,12 @@ export default function Member() {
               </button>
             </div>
             <Form className="w-full" onSubmit={handleSubmit}>
+              <input
+                className="hidden"
+                type="text"
+                name="action"
+                defaultValue="save"
+              />
               <button className="bg-blue-500 py-1 text-lg font-bold text-white rounded w-full">
                 บันทึก
               </button>
@@ -292,13 +328,14 @@ export default function Member() {
         </h3>
       </div>
 
-      <div className="bg-gray-100 px-3 pt-6 pb-1 mt-3">
+      <div className="bg-gray-100 px-3 pt-6 pb-1 mt-3 text-sm sm:text-base">
         <div className="flex flex-col bg-white p-3 gap-2 ">
           <div className="flex flex-row font-bold gap-1">
             <div className="w-2/12"></div>
-            <div className="w-2/12">ที่</div>
+            <div className="w-1/12">ที่</div>
             <div className="w-5/12">ชื่อ-สกุล</div>
             <div className="w-3/12">username</div>
+            <div className="w-1/12">ลบ</div>
           </div>
           {data.map((el, index) => (
             <Items value={el} index={index} key={index} />
